@@ -1,1 +1,1 @@
-env -S $(cat .env)
+export $(cat .env)

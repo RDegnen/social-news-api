@@ -2,9 +2,14 @@
 
 const bcrypt = require('bcrypt');
 const Bookshelf = require('../middleware/bookshelf');
+require('./post');
 
 const User = Bookshelf.Model.extend({
   tableName: 'users',
+
+  post: function() {
+    return this.hasMany('Post');
+  },
 
   constructor: function() {
     Bookshelf.Model.apply(this, arguments);
@@ -33,7 +38,7 @@ const User = Bookshelf.Model.extend({
 
   comparePassword: function(password) {
     let _this = this;
-    
+
     return new Promise((resolve, reject) =>
       bcrypt.compare(password, _this.attributes.passwordDigest, (err, data) =>
           err ? reject(err) : data ? resolve(data) : reject(new Error('Not Authorized')))
