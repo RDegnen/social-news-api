@@ -23,7 +23,6 @@ const show = (req, res, next) => {
 const create = (req, res, next) => {
   let post = req.body;
   post.user_id = req.currentUser.id;
-  
   new Post(post)
     .save()
     .then(post => res.json({ post }))
@@ -31,7 +30,7 @@ const create = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  let search = { _id: req.params.id, user_id: req.currentUser._id };
+  let search = { id: req.params.id, user_id: req.currentUser.id };
   Post.where(search)
     .fetch()
     .then(post => {
@@ -40,14 +39,14 @@ const update = (req, res, next) => {
       }
 
       delete req.body.user_id;  // disallow owner reassignment.
-      return post.update(req.body.post)
+      return post.save(req.body)
         .then(() => res.sendStatus(200));
     })
     .catch(err => next(err));
 };
 
 const destroy = (req, res, next) => {
-  let search = { _id: req.params.id, user_id: req.currentUser._id };
+  let search = { id: req.params.id, user_id: req.currentUser.id };
   Post.where(search)
     .fetch()
     .then(post => {
@@ -55,7 +54,7 @@ const destroy = (req, res, next) => {
         return next();
       }
 
-      return post.remove()
+      return post.destroy()
         .then(() => res.sendStatus(200));
     })
     .catch(err => next(err));
