@@ -8,7 +8,7 @@ const authenticate = require('./concerns/authenticate');
 
 const index = (req, res, next) => {
   Post.where({})
-    .findAll()
+    .fetchAll()
     .then(posts => res.json({ posts }))
     .catch(err => next(err));
 };
@@ -21,16 +21,17 @@ const show = (req, res, next) => {
 };
 
 const create = (req, res, next) => {
-  let post = Object.assign(req.body.post, {
-    _owner: req.currentUser._id,
-  });
-  Post.create(post)
+  let post = req.body;
+  post.user_id = req.currentUser.id;
+  
+  new Post(post)
+    .save()
     .then(post => res.json({ post }))
     .catch(err => next(err));
 };
 
 const update = (req, res, next) => {
-  let search = { _id: req.params.id, _owner: req.currentUser._id };
+  let search = { _id: req.params.id, user_id: req.currentUser._id };
   Post.where(search)
     .fetch()
     .then(post => {
@@ -38,7 +39,7 @@ const update = (req, res, next) => {
         return next();
       }
 
-      delete req.body._owner;  // disallow owner reassignment.
+      delete req.body.user_id;  // disallow owner reassignment.
       return post.update(req.body.post)
         .then(() => res.sendStatus(200));
     })
@@ -46,7 +47,7 @@ const update = (req, res, next) => {
 };
 
 const destroy = (req, res, next) => {
-  let search = { _id: req.params.id, _owner: req.currentUser._id };
+  let search = { _id: req.params.id, user_id: req.currentUser._id };
   Post.where(search)
     .fetch()
     .then(post => {
