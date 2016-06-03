@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt');
 const Bookshelf = require('../middleware/bookshelf');
 require('./post');
+require('./comment');
 
 const User = Bookshelf.Model.extend({
   tableName: 'users',
@@ -10,6 +11,10 @@ const User = Bookshelf.Model.extend({
 
   posts: function() {
     return this.hasMany('Post');
+  },
+
+  comments: function() {
+    return this.hasMany('Comment');
   },
 
   constructor: function() {
