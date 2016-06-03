@@ -6,6 +6,7 @@ require('./post');
 
 const User = Bookshelf.Model.extend({
   tableName: 'users',
+  hasTimestamps: true,
 
   posts: function() {
     return this.hasMany('Post');
