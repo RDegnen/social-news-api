@@ -3,6 +3,7 @@
 const controller = require('lib/wiring/controller');
 const models = require('app/models');
 const Post = models.post;
+const User = models.user;
 
 const authenticate = require('./concerns/authenticate');
 
@@ -60,12 +61,22 @@ const destroy = (req, res, next) => {
     .catch(err => next(err));
 };
 
+const setPosts = (req, res, next) => {
+  let ownerId = req.params.id;
+  User.where({id: ownerId})
+    .fetch({withRelated: ['posts']})
+    .then((user) => {
+      res.json((user.related('posts')));
+    }).catch(err => next(err));
+};
+
 module.exports = controller({
   index,
   show,
   create,
   update,
   destroy,
+  setPosts,
 }, { before: [
-  { method: authenticate, except: ['index', 'show'] },
+  { method: authenticate, except: ['index', 'show', 'setPosts'] },
 ], });

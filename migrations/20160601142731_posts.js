@@ -7,7 +7,8 @@ exports.up = function(knex, Promise) {
     table.text('content').notNullable();
     table.integer('user_id').references('users.id').notNullable();
 
-    table.timestamps();
+    table.timestamp('created_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').defaultTo(knex.fn.now());
   }).then(() => {
     console.log('posts table created');
   }).catch(console.error);

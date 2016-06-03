@@ -7,7 +7,8 @@ exports.up = function(knex, Promise) {
     table.string('token');
     table.string('passwordDigest').notNullable();
 
-    table.timestamps();
+    table.timestamp('created_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').defaultTo(knex.fn.now());
   }).then(() => {
     console.log('users table created');
   }).catch(console.error);
