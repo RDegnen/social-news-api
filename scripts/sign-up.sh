@@ -4,9 +4,9 @@ curl --include --request POST http://localhost:3000/sign-up \
   --header "Content-Type: application/json" \
   --data '{
     "credentials": {
-      "email": "ross@ross.com",
-      "password": "ross",
-      "password_confirmation": "ross"
+      "email": "mittens@ross.com",
+      "password": "mitt",
+      "password_confirmation": "mitt"
     }
   }'
 

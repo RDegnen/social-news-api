@@ -25,8 +25,6 @@ const show = (req, res, next) => {
 const create = (req, res, next) => {
   let comment = req.body;
   comment.user_id = req.currentUser.id;
-  comment.post_id = req.params.postId;
-  comment.comment_id = req.params.commentId;
   new Comment(comment)
     .save()
     .then(comment => res.json({ comment }))
@@ -82,6 +80,15 @@ const setCommentsByPost = (req, res, next) => {
     }).catch(err => next(err));
 };
 
+const setCommentsByComment = (req, res, next) => {
+  let commentId = req.params.id;
+  Comment.where({id: commentId})
+    .fetch({withRelated: ['comments']})
+    .then((comment) => {
+      res.json((comment.related('comments')));
+    }).catch(err => next(err));
+};
+
 module.exports = controller({
   index,
   show,
@@ -90,6 +97,8 @@ module.exports = controller({
   destroy,
   setCommentsByAuthor,
   setCommentsByPost,
+  setCommentsByComment,
 }, { before: [
-  { method: authenticate, except: ['index', 'show', 'setCommentsByAuthor', 'setCommentsByPost'] },
+  { method: authenticate, except: ['index', 'show', 'setCommentsByAuthor',
+                                   'setCommentsByPost', 'setCommentsByComment'] },
 ], });
