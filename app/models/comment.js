@@ -15,6 +15,14 @@ const Comment = Bookshelf.Model.extend({
   post: function() {
     return this.belongsTo('Post');
   },
+
+  comments: function() {
+    return this.hasMany(Comment);
+  },
+
+  comment: function() {
+    return this.belongsTo(Comment);
+  }
 });
 
 module.exports = Bookshelf.model('Comment', Comment);
