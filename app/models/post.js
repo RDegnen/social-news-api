@@ -15,6 +15,22 @@ const Post = Bookshelf.Model.extend({
   comments: function() {
     return this.hasMany('Comment');
   },
+
+  constructor: function() {
+    Bookshelf.Model.apply(this, arguments);
+
+    this.on('destroying', function() {
+
+      return new Promise((resolve, reject) => {
+        this.fetch({
+          withRelated: ['comments']
+        }).then(post => resolve(post))
+          .catch(err => reject(err));
+      }).then(post =>
+        post.related('comments').invokeThen('destroy')
+      ).catch(error => console.log(error));
+    });
+  }
 });
 
 module.exports = Bookshelf.model('Post', Post);
