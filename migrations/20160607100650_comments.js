@@ -1,21 +1,22 @@
 'use strict';
 
 exports.up = function(knex, Promise) {
-  return knex.schema.createTable( 'posts', function ( table ) {
+  return knex.schema.createTable('comments', function (table) {
     table.increments('id').primary();
-    table.string('title').notNullable();
     table.text('content').notNullable();
     table.integer('user_id').references('users.id')
+    table.integer('post_id').references('posts.id').notNullable();
+    table.integer('comment_id').references('comments.id');
 
     table.timestamps();
   }).then(() => {
-    console.log('posts table created');
+    console.log('commments table created');
   }).catch(console.error);
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('posts')
+  return knex.schema.dropTable('comments')
     .then(() => {
-      console.log('posts table dropped');
+      console.log('comments table dropped');
     }).catch(console.error);
 };
