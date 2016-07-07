@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTable('comments', function (table) {
     table.increments('id').primary();
     table.text('content').notNullable();
-    table.integer('user_id').references('users.id')
+    table.integer('user_id').references('users.id');
     table.integer('post_id').references('posts.id').notNullable();
     table.integer('comment_id').references('comments.id');
 
