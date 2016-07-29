@@ -41,7 +41,7 @@ const update = (req, res, next) => {
 
       delete req.body.user_id;  // disallow owner reassignment.
       return post.save(req.body)
-        .then(() => res.sendStatus(200));
+        .then(() => res.json({ post }));
     })
     .catch(err => next(err));
 };
