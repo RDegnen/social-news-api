@@ -94,7 +94,7 @@ const signout = (req, res, next) => {
       token,
     })
   ).then((user) =>
-    user ? res.sendStatus(200) : next()
+    user ? res.sendStatus(204) : next()
   ).catch(next);
 };
 
