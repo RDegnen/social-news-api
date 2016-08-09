@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
     table.increments('id').primary();
     table.text('content').notNullable();
     table.integer('user_id').references('users.id');
-    table.integer('post_id').references('posts.id').notNullable();
+    table.integer('post_id').references('posts.id');
     table.integer('comment_id').references('comments.id');
 
     table.timestamps();
